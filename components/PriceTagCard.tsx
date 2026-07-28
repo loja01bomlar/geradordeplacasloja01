@@ -126,7 +126,7 @@ const PriceTagCard: React.FC<PriceTagCardProps> = ({ product, index, onUpdate, o
             maxWidth: '90%',
             fontSize: getAutoTitleFontSize(),
             fontWeight: 'bold',
-            fontFamily: "'MUSEO SANS', 'Montserrat', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             letterSpacing: '-0.05em',
             whiteSpace: 'nowrap',
             lineHeight: 0.9,
@@ -140,7 +140,7 @@ const PriceTagCard: React.FC<PriceTagCardProps> = ({ product, index, onUpdate, o
             width: '54%', 
             fontSize: getAutoSubtitleFontSize(), 
             color: 'black',
-            fontFamily: "'MUSEO SANS', 'Montserrat', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontWeight: 'normal',
             lineHeight: 'calc(0.85em + 0.5px)',
             paddingLeft: '0.25px',
@@ -154,9 +154,7 @@ const PriceTagCard: React.FC<PriceTagCardProps> = ({ product, index, onUpdate, o
             left: `calc(100% * 110 / 651 + 73px)`, 
             width: `calc(100% * 270 / 651)`,
             textAlign: 'right',
-            top: isGeneratingPdf 
-                ? `calc(100% * 85 / 271 + 36px)` 
-                : `calc(100% * 85 / 271 + 29px)`,
+            top: `calc(100% * 85 / 271 + 29px)`,
             fontSize: 'calc(6.2em - 14px)', 
             fontWeight: '700', 
             lineHeight: 0.85,
@@ -166,9 +164,7 @@ const PriceTagCard: React.FC<PriceTagCardProps> = ({ product, index, onUpdate, o
         priceDec: {
             position: 'absolute',
             left: `calc(100% * 385 / 651 + 77px)`,
-            top: isGeneratingPdf 
-                ? `calc(100% * 68 / 271 + 32px)` 
-                : `calc(100% * 68 / 271 + 25px)`,
+            top: `calc(100% * 68 / 271 + 25px)`,
             fontSize: 'calc(3.2em - 11px)', 
             fontWeight: '700',
             letterSpacing: '-0.05em', 
@@ -179,13 +175,11 @@ const PriceTagCard: React.FC<PriceTagCardProps> = ({ product, index, onUpdate, o
             left: isRightColumn 
                 ? `calc((100% * 200 / 651) - 8px + ${micro.validFrom.x}px)` 
                 : `calc((100% * 200 / 651) - 9px + ${micro.validFrom.x}px)`, 
-            top: isGeneratingPdf 
-                ? `calc(100% * 223 / 271 + 3.0px + ${micro.validFrom.y}px)` 
-                : `calc(100% * 223 / 271 + 1.5px + ${micro.validFrom.y}px)`, 
+            top: `calc(100% * 223 / 271 + 1.5px + ${micro.validFrom.y}px)`, 
             fontSize: 'calc(0.6em - 1px)', 
             color: '#000', width: '35px', textAlign: 'center',
             fontWeight: 'bold',
-            fontFamily: "'MUSEO SANS', 'Montserrat', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             whiteSpace: 'nowrap',
         },
         validUntil: {
@@ -193,13 +187,11 @@ const PriceTagCard: React.FC<PriceTagCardProps> = ({ product, index, onUpdate, o
             left: isRightColumn 
                 ? `calc((100% * 260 / 651) - 12.5px + ${micro.validUntil.x}px)` 
                 : `calc((100% * 260 / 651) - 13.5px + ${micro.validUntil.x}px)`, 
-            top: isGeneratingPdf 
-                ? `calc(100% * 223 / 271 + 3.0px + ${micro.validUntil.y}px)` 
-                : `calc(100% * 223 / 271 + 1.5px + ${micro.validUntil.y}px)`, 
+            top: `calc(100% * 223 / 271 + 1.5px + ${micro.validUntil.y}px)`, 
             fontSize: 'calc(0.6em - 1px)', 
             color: '#000', width: '55px', textAlign: 'center',
             fontWeight: 'bold',
-            fontFamily: "'MUSEO SANS', 'Montserrat', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             whiteSpace: 'nowrap',
         }
     };
