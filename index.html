@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
-    <meta charset="UTF-g" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gerador de Placas de Preço</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,14 +17,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Oswald:wght@700&display=swap" rel="stylesheet" crossorigin="anonymous">
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Oswald:wght@700&display=swap');
+      
       body {
         font-family: 'Montserrat', sans-serif;
+      }
+      .font-montserrat {
+        font-family: 'Montserrat', sans-serif !important;
+      }
+      .font-oswald {
+        font-family: 'Oswald', sans-serif !important;
       }
       /* Hide scrollbar for Chrome, Safari and Opera */
       .no-scrollbar::-webkit-scrollbar {
           display: none;
       }
-
       /* Hide scrollbar for IE, Edge and Firefox */
       .no-scrollbar {
           -ms-overflow-style: none;  /* IE and Edge */
@@ -40,7 +47,6 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-[#f8f9fa] text-black">
     <div id="root"></div>

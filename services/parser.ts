@@ -748,18 +748,29 @@ function getCommonWordPrefix(strings: string[]): string {
 export function clusterItemsByCommonPrefix(items: any[]) {
     if (!items || items.length < 2) return;
 
-    // Agrupa itens por preço
+    // Normaliza preço para comparar ignorando espaços ou ponto/vírgula
+    const normPrice = (p: string) => (p || '').toString().replace(/\s+/g, '').replace('.', ',').toUpperCase();
+
+    // Agrupa itens por preço normalizado
     const priceMap = new Map<string, any[]>();
     items.forEach(item => {
-        const p = item.price || item.preco || '';
-        if (!priceMap.has(p)) priceMap.set(p, []);
-        priceMap.get(p)!.push(item);
+        const pKey = normPrice(item.price || item.preco || '');
+        if (!priceMap.has(pKey)) priceMap.set(pKey, []);
+        priceMap.get(pKey)!.push(item);
     });
+
+    const KEY_CATEGORIES = [
+        'DESODORANTE', 'SHAMPOO', 'CONDICIONADOR', 'SABONETE', 'ESMALTE', 'CREME', 
+        'LOÇÃO', 'COLÔNIA', 'HIDRATANTE', 'PROTETOR', 'ÁGUA MICELAR', 'MÁSCARA', 
+        'SÉRUM', 'TALCO', 'ABSORVENTE', 'FRALDA', 'LENÇO', 'GEL', 'FREGELLS', 
+        'HALLS', 'TRIDENT', 'MENTOS', 'FINI', 'DORI', 'TIC TAC', 'DOVE', 'REXONA',
+        'NIVEA', 'BOZZANO', 'MONANGE', 'RISQUE', 'COLORAMA', 'IMPALA'
+    ];
 
     priceMap.forEach((priceItems) => {
         if (priceItems.length < 2) return;
 
-        // Mapeia por primeiras 2 palavras do título
+        // Mapeia por primeiras 2 palavras do título (ou 1 palavra se for categoria/marca chave)
         const prefixMap = new Map<string, any[]>();
 
         priceItems.forEach(item => {
@@ -769,11 +780,14 @@ export function clusterItemsByCommonPrefix(items: any[]) {
                 const first2 = words.slice(0, 2).join(' ').toUpperCase();
                 if (!prefixMap.has(first2)) prefixMap.set(first2, []);
                 prefixMap.get(first2)!.push(item);
-            } else if (words.length === 1) {
+            }
+            if (words.length >= 1) {
                 const word = words[0].toUpperCase();
-                if (['FREGELLS', 'HALLS', 'TRIDENT', 'MENTOS', 'FINI', 'DORI', 'TIC TAC'].includes(word)) {
-                    if (!prefixMap.has(word)) prefixMap.set(word, []);
-                    prefixMap.get(word)!.push(item);
+                if (KEY_CATEGORIES.includes(word)) {
+                    // Também adiciona ao mapa da palavra única para pegar variações como DESODORANTE
+                    const key1 = `SINGLE_${word}`;
+                    if (!prefixMap.has(key1)) prefixMap.set(key1, []);
+                    prefixMap.get(key1)!.push(item);
                 }
             }
         });
@@ -784,9 +798,10 @@ export function clusterItemsByCommonPrefix(items: any[]) {
                 const commonPrefix = getCommonWordPrefix(titles);
 
                 const commonWords = commonPrefix.trim().split(/\s+/).filter(Boolean);
-                const isSingleWordBrand = commonWords.length === 1 && ['FREGELLS', 'HALLS', 'TRIDENT', 'MENTOS', 'FINI', 'DORI', 'TIC TAC'].includes(commonWords[0].toUpperCase());
+                const firstWord = commonWords[0] ? commonWords[0].toUpperCase() : '';
+                const isKeyCategory = KEY_CATEGORIES.includes(firstWord);
 
-                if (commonWords.length >= 2 || isSingleWordBrand) {
+                if (commonWords.length >= 2 || (commonWords.length === 1 && isKeyCategory)) {
                     const cleanBaseTitle = commonPrefix.trim();
                     cluster.forEach(item => {
                         const oldTitle = (item.parsed?.titulo || item.nome || item.titulo || '').trim();
@@ -795,8 +810,12 @@ export function clusterItemsByCommonPrefix(items: any[]) {
                             if (item.parsed) {
                                 item.parsed.titulo = cleanBaseTitle;
                                 if (suffix) {
-                                    const currentSub2 = item.parsed.subtitulo2 ? item.parsed.subtitulo2.trim() : '';
-                                    item.parsed.subtitulo2 = currentSub2 ? `${suffix} | ${currentSub2}` : suffix;
+                                    const currentSub1 = item.parsed.subtitulo1 ? item.parsed.subtitulo1.trim() : '';
+                                    if (currentSub1) {
+                                        item.parsed.subtitulo1 = `${suffix} ${currentSub1}`.trim();
+                                    } else {
+                                        item.parsed.subtitulo1 = suffix;
+                                    }
                                 }
                             } else {
                                 item.nome = cleanBaseTitle;
