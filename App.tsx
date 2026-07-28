@@ -267,22 +267,22 @@ const App: React.FC = () => {
                     useCORS: true,
                     logging: false,
                     onclone: (clonedDoc) => {
-                        // Copia todas as folhas de estilo (Tailwind, Google Fonts, etc.) do documento principal para o clone
-                        const styleNodes = document.head.querySelectorAll('style, link[rel="stylesheet"]');
-                        styleNodes.forEach(node => {
-                            clonedDoc.head.appendChild(node.cloneNode(true));
-                        });
+                        const link1 = clonedDoc.createElement('link');
+                        link1.rel = 'preconnect';
+                        link1.href = 'https://fonts.googleapis.com';
+                        clonedDoc.head.appendChild(link1);
 
-                        // Garante a injeção explícita de CSS de fontes e renderização
-                        const fontStyle = clonedDoc.createElement('style');
-                        fontStyle.innerHTML = `
-                            @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Oswald:wght@700&display=swap');
-                            * {
-                                -webkit-font-smoothing: antialiased;
-                                -moz-osx-font-smoothing: grayscale;
-                            }
-                        `;
-                        clonedDoc.head.appendChild(fontStyle);
+                        const link2 = clonedDoc.createElement('link');
+                        link2.rel = 'preconnect';
+                        link2.href = 'https://fonts.gstatic.com';
+                        link2.crossOrigin = 'anonymous';
+                        clonedDoc.head.appendChild(link2);
+
+                        const link3 = clonedDoc.createElement('link');
+                        link3.rel = 'stylesheet';
+                        link3.href = 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Oswald:wght@700&display=swap';
+                        link3.crossOrigin = 'anonymous';
+                        clonedDoc.head.appendChild(link3);
                     }
                 });
                 const textImgData = textCanvas.toDataURL('image/png');

@@ -36,29 +36,22 @@ const EditorView = forwardRef<HTMLDivElement, EditorViewProps>(({ products, back
     // Sincroniza o ref externo com o interno
     React.useImperativeHandle(ref, () => internalRef.current as HTMLDivElement);
 
-    const scaleRef = useRef(scale);
-    useEffect(() => {
-        scaleRef.current = scale;
-    }, [scale]);
-
     useEffect(() => {
         if (isGeneratingPdf) {
             return;
         }
 
-        let rafId: number | null = null;
+        let lastScale = scale;
 
         const updateScale = () => {
             if (containerRef.current) {
-                const parentElement = containerRef.current.parentElement;
-                if (parentElement) {
-                    const parentWidth = parentElement.clientWidth;
-                    if (parentWidth > 0) {
-                        // O tamanho base perfeito para o preview de 100% zoom é exatamente 664px
-                        const newScale = Math.round((parentWidth / 664) * 1000) / 1000;
-                        if (Math.abs(newScale - scaleRef.current) > 0.005) {
-                            setScale(newScale);
-                        }
+                const parentElement = containerRef.current.parentElement || containerRef.current;
+                const parentWidth = parentElement.clientWidth || containerRef.current.clientWidth;
+                if (parentWidth > 0) {
+                    const newScale = parentWidth / 664;
+                    if (Math.abs(newScale - lastScale) > 0.001) {
+                        lastScale = newScale;
+                        setScale(newScale);
                     }
                 }
             }
@@ -66,12 +59,9 @@ const EditorView = forwardRef<HTMLDivElement, EditorViewProps>(({ products, back
 
         updateScale();
 
-        const targetEl = containerRef.current?.parentElement;
+        const targetEl = containerRef.current?.parentElement || containerRef.current;
         const observer = new ResizeObserver(() => {
-            if (rafId) cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(() => {
-                updateScale();
-            });
+            updateScale();
         });
 
         if (targetEl) {
@@ -79,7 +69,6 @@ const EditorView = forwardRef<HTMLDivElement, EditorViewProps>(({ products, back
         }
 
         return () => {
-            if (rafId) cancelAnimationFrame(rafId);
             observer.disconnect();
         };
     }, [isGeneratingPdf]);
